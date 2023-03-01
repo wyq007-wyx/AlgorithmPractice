@@ -1,0 +1,58 @@
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+    
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+*/
+class Solution {
+public:
+	Node* copyRandomList(Node* head) {
+        if (head == NULL) return NULL;
+        Node *p = head;
+        Node *q;
+        Node *temp;
+        //原链表为1-2-3-4-5
+        //新链表为1-1-2-2-3-3-4-4-5-5
+        while (p != NULL) {
+            q = new Node(p->val);
+            temp = p->next;
+            p->next = q;
+            q->next = temp;
+            p = temp;
+        }
+        p = head;
+        q = p->next;
+        //利用前后位置关系建立映射
+        while (p != NULL) {
+            if (p->random == NULL) q->random = NULL;
+            else {
+                q->random = p->random->next;
+            }
+            p = q->next;
+            if(p!=NULL)q = p->next;
+        }
+        p = head;
+        q = p->next;
+        temp = q;
+        //将链表拆分开
+        while (p != NULL) {
+            p->next = q->next;
+            p = p->next;
+            if (p != NULL) {
+                q->next = p->next;
+                q = q->next;
+            }
+        }
+        return temp;
+
+    }
+};
